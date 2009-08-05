@@ -49,13 +49,16 @@ sub take_picture {
     my $short_file = "$pic_base/$short_name";
     rename $filename => $short_file;
 
-    my $pic_uri = "$pic_base/$short_name";
+    my $pic_uri = $self->config->{picture_uri_base} . "/$short_name";
     print "\nSaved $short_file as $pic_uri\n";
     return $pic_uri;
 }
 
 sub _build_config {
     my $vhs_config_file = "$FindBin::Bin/../../.vhs.yaml";
+    unless (-e $vhs_config_file) {
+        $vhs_config_file = '/etc/vhs.yaml';
+    }
     return LoadFile($vhs_config_file);
 }
 
