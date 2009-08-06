@@ -4,7 +4,7 @@
    see LICENSE file for full details.
 */
 
-#define doorPin (4)
+#define spaceDoorPin (4)
 #define bathroomDoorPin (7)
 #define tempPin (0)
 #define buzzerHighPin (11)
@@ -27,24 +27,24 @@ int NOTES[] = {
     4186,  // C8
 };
 
-int doorPinState;
+int spaceDoorPinState;
 int bathroomDoorPinState;
 
 void setup() {
     Serial.begin( 9600 );
 
     // set input pins & pull-ups
-    pinMode( doorPin, INPUT );
+    pinMode( spaceDoorPin, INPUT );
     pinMode( tempPin, INPUT );
     pinMode( bathroomDoorPin, INPUT );
-    digitalWrite( doorPin, HIGH ); 
+    digitalWrite( spaceDoorPin, HIGH ); 
     digitalWrite( tempPin, HIGH );
     digitalWrite( bathroomDoorPin, HIGH );
 
     //  reset piezo
     digitalWrite( buzzerHighPin, LOW);
 
-    doorPinState = digitalRead( doorPin );
+    spaceDoorPinState = digitalRead( spaceDoorPin );
     bathroomDoorPinState = digitalRead( bathroomDoorPin );
 
     // transform note frequencies to periods
@@ -63,12 +63,12 @@ float readTemperature(int pin)
 }
 
 ///  Check door status and update global doorPinState
-int checkDoor() {
+int checkSpaceDoor() {
     int newDoorPinState;
 
-    newDoorPinState = digitalRead( doorPin );
-    if( doorPinState != newDoorPinState ){
-        doorPinState = newDoorPinState;
+    newDoorPinState = digitalRead( spaceDoorPin );
+    if( spaceDoorPinState != newDoorPinState ){
+        spaceDoorPinState = newDoorPinState;
         return 1;
     }
     return 0;
@@ -174,12 +174,12 @@ int buzz(int note, long duration)
 }
 
 void loop() {
-    const char* door_name = "door";
-    const char* bathroom_door_name = "bathroom";
+    const char* space_door_name = "space door";
+    const char* bathroom_door_name = "bathroom door";
 
     //  Poll & push events to serial
-    if (checkDoor()) {
-        print_door_state(&doorPinState, door_name);
+    if (checkSpaceDoor()) {
+        print_door_state(&spaceDoorPinState, space_door_name);
     }
     
     if (checkBathroomDoor()) {
@@ -194,8 +194,8 @@ void loop() {
             Serial.print(temp);
             Serial.println('C');
         }
-        else if (INPUT_BUFFER("door state")) {
-            print_door_state(&doorPinState, door_name);
+        else if (INPUT_BUFFER("space door state")) {
+            print_door_state(&spaceDoorPinState, space_door_name);
         }
         else if (INPUT_BUFFER("bathroom door state")) {
             print_door_state(&bathroomDoorPinState, bathroom_door_name);
