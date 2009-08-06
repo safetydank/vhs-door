@@ -67,10 +67,10 @@ void loop() {
 
     if (++cycles % 100 == 0) {
       if (doorOpen) {
-        Serial.println("door open");
+        Serial.println("space door open");
       }
       else {
-        Serial.println("door closed");
+        Serial.println("space door closed");
       }
       doorOpen = !doorOpen;
     }

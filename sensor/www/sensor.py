@@ -15,10 +15,10 @@ TIMEOUT = 30
 DOC = """\
 sensor.hackspace.ca - a <a href="http://vancouver.hackspace.ca">VHS</a> project
 
-    <a href="/door/state">/door/state</a>
+    <a href="/space/door/state">/door/state</a>
        text/plain response: open|closed (entrance door)
     
-    <a href="/door/photo">/door/photo</a>
+    <a href="/space/door/photo">/door/photo</a>
        image/jpeg response: a photo of the entrance taken in the last %ds
     
     <a href="/bathroom/door/state">/bathroom/door/state</a>
@@ -46,7 +46,7 @@ SERIAL_HOST_PORT = ('localhost', 9994)
 
 # route urls to handler classes
 urls = (
-    r'/door/(state|photo(?:\/url)?)/?', 'Door',
+    r'/space/door/(state|photo(?:\/url)?)/?', 'Door',
     r'/bathroom/door/(state)/?', 'BathroomDoor',
     r'/temperature/(celsius|fahrenheit)/?', 'Temperature',
     r'/buzz/?', 'Buzz',
@@ -95,13 +95,13 @@ def take_door_photo():
 class Door(object):
     def __init__(self, *args, **kw):
         super(Door, self).__init__(*args, **kw)
-        self.doorname = self.response_cmd = 'door'
+        self.doorname = 'space door'
         
     def door_state(self):
         response = serial_query('%s state' % self.doorname).strip()
-        if response == '%s closed' % self.response_cmd:
+        if response == '%s closed' % self.doorname:
             return 'closed'
-        elif response == '%s open' % self.response_cmd:
+        elif response == '%s open' % self.doorname:
             return 'opened'
         else:
             return '!unknown response <%s>' % response
@@ -136,7 +136,6 @@ class BathroomDoor(Door):
     def __init__(self, *args, **kw):
         super(BathroomDoor, self).__init__(*args, **kw)
         self.doorname = 'bathroom door'
-        self.response_cmd = 'bathroom'
 
 class Temperature:
     @property
