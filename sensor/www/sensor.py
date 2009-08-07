@@ -15,10 +15,10 @@ TIMEOUT = 30
 DOC = """\
 sensor.hackspace.ca - a <a href="http://vancouver.hackspace.ca">VHS</a> project
 
-    <a href="/space/door/state">/door/state</a>
+    <a href="/space/door/state">/space/door/state</a>
        text/plain response: open|closed (entrance door)
     
-    <a href="/space/door/photo">/door/photo</a>
+    <a href="/space/door/photo">/space/door/photo</a>
        image/jpeg response: a photo of the entrance taken in the last %ds
     
     <a href="/bathroom/door/state">/bathroom/door/state</a>
