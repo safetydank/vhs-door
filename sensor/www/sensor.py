@@ -38,7 +38,7 @@ Restricted urls require VHS membership
     <a href="/buzz">/buzz</a>
        text/plain response: (raw buzzer response)
 
-    <a href="/door/photo/url">/door/photo/url</a>
+    <a href="/space/door/photo/url">/space/door/photo/url</a>
        image/jpeg response: redirects to URL of a new photo of the entrance
 """ % TIMEOUT
 
@@ -244,7 +244,6 @@ class Feed:
                 return self.pachube_update()
             except Exception, e:
                 return 'Error: %s' % e
-
     
 if __name__ == '__main__':
     app.run()
