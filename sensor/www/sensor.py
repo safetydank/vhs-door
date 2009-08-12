@@ -82,7 +82,9 @@ def take_door_photo():
     pic_base = config.get('picture_base')
     if pic_base:
         filename = os.path.join(pic_base, '%s.jpeg' % short_hash)
-        os.system('streamer -c /dev/video0 -b 16 -o %s >/dev/null 2>&1' % filename)
+        video_device = config.get('video_device', '/dev/video0')
+        os.system('streamer -c %s -b 16 -o %s >/dev/null 2>&1' 
+                % (video_device, filename))
         short_file = os.path.splitext(filename)[0] + '.jpg'
         os.rename(filename, short_file)
         pic_uri_base = config.get('picture_uri_base') 

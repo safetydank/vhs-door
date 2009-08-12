@@ -27,12 +27,13 @@ import traceback
 
 SERVER_HOST_PORT = 'localhost', 9994
 
-SERIAL_PORT, LOG_FILENAME, YAML_CONFIG = {
+DEFAULT_SERIAL_PORT, LOG_FILENAME, YAML_CONFIG = {
     'nt': ('COM12', 'serialserver.log', 'vhs.yaml'),
 }.get(os.name, ('/dev/ttyUSB0', '/var/log/vhs-serialserver.log', '/etc/vhs.yaml'))
 
 config = yaml.load(file(YAML_CONFIG))
 SENSOR_HOOKS_DIR = config.get('sensor_hooks_dir')
+SERIAL_PORT = config.get('serial_device', DEFAULT_SERIAL_PORT)
 
 # socket read timeout in seconds
 TIMEOUT  = 0.01
