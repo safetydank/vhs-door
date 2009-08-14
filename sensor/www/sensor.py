@@ -38,6 +38,9 @@ Restricted urls require VHS membership
     <a href="/buzz">/buzz</a>
        text/plain response: (raw buzzer response)
 
+    <a href="/alleylight">/alleylight</a>
+       text/plain response: (turns on alley light)
+
     <a href="/space/door/photo/url">/space/door/photo/url</a>
        image/jpeg response: redirects to URL of a new photo of the entrance
 """ % TIMEOUT
@@ -50,6 +53,7 @@ urls = (
     r'/bathroom/door/(state)/?', 'BathroomDoor',
     r'/temperature/(celsius|fahrenheit)/?', 'Temperature',
     r'/buzz/?', 'Buzz',
+    r'/alleylight/?', 'AlleyLight',
     r'/feed/(eeml)/?', 'Feed',
     r'/feed/(pusheeml)/?', 'Feed',
     r'.*', 'Static',
@@ -67,7 +71,7 @@ def serial_query(query):
 
 def get_celsius():
     response = serial_query('temperature')
-    match = re.search(r'((\d+)(\.\d+)?)C?', response)
+    match = re.search(r'(-?(\d+)(\.\d+)?)C?', response)
     if match:
         return match.groups()[0]
     else:
@@ -178,6 +182,11 @@ class Buzz:
     @restricted
     def GET(self):
         return serial_query('buzz');
+
+class AlleyLight:
+    @restricted
+    def GET(self):
+        os.system('/usr/local/bin/lightdoor.pl');
 
 class Feed:
     @property
