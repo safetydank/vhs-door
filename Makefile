@@ -21,6 +21,7 @@ install: $(HOOKS_SRC) $(DAEMON) $(LIBS)
 	install -o www-data -g www-data -p -m 755 sensor/www/decorators.py $(WWW_ROOT)/sensor
 	# update serial server and startup script
 	install -o nobody -g dialout -p -m 755 sensor/serialserver.py $(INSTALL_DIR)bin
+	install -o nobody -g hackers -p -m 755 sensor/checkdevices.py $(INSTALL_DIR)bin
 	install sensor/serialserverd /etc/init.d
 
 release: $(ARDUINO_HEX)

@@ -23,6 +23,8 @@ set -e
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
+    # check devices first
+    /usr/local/vhs/bin/checkdevices.py 
 	start-stop-daemon --start --quiet -m --pidfile /var/run/$NAME.pid -b -c danv \
 		--exec $DAEMON -- $DAEMON_OPTS || true
 	echo "$NAME."
@@ -36,6 +38,7 @@ case "$1" in
 	echo -n "Restarting $DESC: "
 	start-stop-daemon --stop --quiet --pidfile /var/run/$NAME.pid || true
 	sleep 1
+    /usr/local/vhs/bin/checkdevices.py 
 	start-stop-daemon --start --quiet -m --pidfile /var/run/$NAME.pid -b -c danv \
 		--exec $DAEMON -- $DAEMON_OPTS || true
 	echo "$NAME."
