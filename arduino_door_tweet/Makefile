@@ -38,7 +38,7 @@
 
 TARGET = arduino_door_tweet
 INSTALL_DIR = /usr/local/share/arduino-0015/
-PORT = /dev/ttyUSB0
+PORT = /dev/ttyUSB1
 UPLOAD_RATE = 19200
 AVRDUDE_PROGRAMMER = stk500v1
 MCU = atmega168

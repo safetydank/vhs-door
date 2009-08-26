@@ -4,10 +4,11 @@
    see LICENSE file for full details.
 */
 
-#define spaceDoorPin (4)
+#define spaceDoorPin (3)
 #define bathroomDoorPin (7)
+#define plungerPin (2)
 #define tempPin (0)
-#define buzzerHighPin (11)
+#define buzzerHighPin (5)
 #define INPUT_BUFFER(S) (strcmp((S), buffer) == 0)
 
 //  Incoming serial msg buffer
@@ -30,6 +31,9 @@ int NOTES[] = {
 int spaceDoorPinState;
 int bathroomDoorPinState;
 
+int plungerState;
+int lastPlungerState;
+
 void setup() {
     Serial.begin( 9600 );
 
@@ -37,15 +41,18 @@ void setup() {
     pinMode( spaceDoorPin, INPUT );
     pinMode( tempPin, INPUT );
     pinMode( bathroomDoorPin, INPUT );
+    pinMode( plungerPin, INPUT );
     digitalWrite( spaceDoorPin, HIGH ); 
     digitalWrite( tempPin, HIGH );
     digitalWrite( bathroomDoorPin, HIGH );
+    digitalWrite( plungerPin, HIGH );
 
     //  reset piezo
     digitalWrite( buzzerHighPin, LOW);
 
     spaceDoorPinState = digitalRead( spaceDoorPin );
     bathroomDoorPinState = digitalRead( bathroomDoorPin );
+    plungerState = lastPlungerState = digitalRead( plungerPin );
 
     // transform note frequencies to periods
     for (int i=0; i < 8; ++i) {
@@ -84,6 +91,15 @@ int checkBathroomDoor() {
         return 1;
     }
     return 0;
+}
+
+int checkPlunger() {
+    plungerState = digitalRead( plungerPin );
+    if ( plungerState != lastPlungerState ) {
+        Serial.print("plunger ");
+        Serial.println(plungerState ? "down" : "up");
+    }
+    lastPlungerState = plungerState;
 }
 
 ///  Check serial port for incoming messages and update global buffer
@@ -159,9 +175,9 @@ int buzz(int note, long duration)
         // elapsed_time += period;
         
         // XXX the above code doesn't work yet, so here's a bodgy fallback
-        analogWrite(11, 128);
+        analogWrite(buzzerHighPin, 128);
         delay(1000);
-        analogWrite(11, 0);
+        analogWrite(buzzerHighPin, 0);
 
         // }
         return 1;
@@ -186,6 +202,8 @@ void loop() {
         print_door_state(&bathroomDoorPinState, bathroom_door_name);
     }
 
+    checkPlunger();
+
     //  Respond to incoming serial commands
     if (checkSerialCommand()) {
         if (INPUT_BUFFER("temperature")) {
@@ -203,6 +221,11 @@ void loop() {
         else if (INPUT_BUFFER("buzz")) {
             buzz(0, 2e6);
             Serial.println("buzz played");
+        }
+        else if (INPUT_BUFFER("plunger state")) {
+            int plungerState = digitalRead(plungerPin);
+            Serial.print("plunger ");
+            Serial.println(plungerState ? "down" : "up");
         }
     }
 }
